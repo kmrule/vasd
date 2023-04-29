@@ -178,24 +178,28 @@ function ReOrder(cnt) {
 
 function testGoogle(pname) {
     return new Promise((resolve, reject) => {
-        const url = "https://policies.google.com/terms?hl=zh-CN";
-        const method = "GET";
+        const url = `https://policies.google.com/terms?hl=zh-CN`;
+        let opts = { policy: pname }
+        const method = `GET`;
         const headers = {
-            "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 15_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.1 Mobile/15E148 Safari/604.1",
-            "Accept-Language": "zh-CN,zh;q=0.9",
+            'Accept-Encoding': `gzip, deflate, br`,
+            'Connection': `keep-alive`,
+            'Accept': `text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8`,
+            'Host': `www.google.com`,
+            'User-Agent': `Mozilla/5.0 (iPhone; CPU iPhone OS 15_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.1 Mobile/15E148 Safari/604.1`,
+            'Accept-Language': `zh-CN,zh-Hans;q=0.9`
         };
-
+        const body = ``;
         const myRequest = {
             url: url,
             method: method,
             headers: headers,
+            body: body,
+            opts: opts,
+            //timeout: 3000
         };
 
-        let timer = setTimeout(() => {
-            reject(new Error("请求超时"));
-        }, 5000); // 设置超时时间为 5 秒
-
-        $task.fetch({ url: 'https://policies.google.com/terms?hl=zh-CN' }).then(response => {
+        $task.fetch({ myRequest }).then(response => {
             const body = response.body;
             if (body.indexOf('中国') >= 0) {
                 NoList.push(pname);
@@ -211,5 +215,6 @@ function testGoogle(pname) {
             console.log(pname + ': 该节点检测失败');
             reject('Error');
         });
-    });
+    })
 }
+
