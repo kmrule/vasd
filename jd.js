@@ -1,34 +1,3 @@
-Skip to content
-Search or jump to…
-Pull requests
-Issues
-Codespaces
-Marketplace
-Explore
-
-@kmrule
-kmrule
-    /
-    vasd
-Public
-Cannot fork because you own this repository and are not a member of any organizations.
-    Code
-Issues
-Pull requests
-Actions
-Projects
-Security
-Insights
-Settings
-Beta Try the new code view
-vasd / szjd.js /
-@kmrule
-kmrule Create szjd.js
-Latest commit bffe15a 8 hours ago
-History
-1 contributor
-215 lines(188 sloc)  9.6 KB
-
 
 /***
 For Quantumult-X 598+ ONLY!!
