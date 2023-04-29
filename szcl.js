@@ -179,15 +179,14 @@ function ReOrder(cnt) {
 function testGoogle(pname) {
     return new Promise((resolve, reject) => {
         const url = `https://policies.google.com/terms?hl=zh-CN`;
-        let opts = { policy: pname }
         const method = `GET`;
         const headers = {
-            'Accept-Encoding': `gzip, deflate, br`,
-            'Connection': `keep-alive`,
-            'Accept': `text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8`,
-            'Host': `www.google.com`,
-            'User-Agent': `Mozilla/5.0 (iPhone; CPU iPhone OS 15_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.1 Mobile/15E148 Safari/604.1`,
-            'Accept-Language': `zh-CN,zh-Hans;q=0.9`
+            'Accept-Encoding' : `gzip, deflate, br`,
+            'Connection' : `keep-alive`,
+            'Accept' : `text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8`,
+            'Host' : `policies.google.com`,
+            'User-Agent' : `Mozilla/5.0 (iPhone; CPU iPhone OS 15_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.1 Mobile/15E148 Safari/604.1`,
+            'Accept-Language' : `zh-CN,zh-Hans;q=0.9`
         };
         const body = ``;
         const myRequest = {
@@ -195,26 +194,29 @@ function testGoogle(pname) {
             method: method,
             headers: headers,
             body: body,
-            opts: opts,
             //timeout: 3000
         };
-
-        $task.fetch({ myRequest }).then(response => {
-            const body = response.body;
-            if (body.indexOf('中国') >= 0) {
-                NoList.push(pname);
-                console.log(pname + ': 该节点已被送中');
-                resolve('YES');
+        
+        $task.fetch(myRequest).then(response => {
+            let sCode = response.statusCode
+            let data = response.body
+            hmessage = "该节点未被送中"
+            if (data.indexOf('中国') !== -1) {
+                NoList.push(pname)
+                console.log(pname + ": 该节点已被送中 ->" +sCode)
+                resolve("YES")
+                return
             } else {
-                OKList.push(pname);
-                console.log(pname + ': 该节点未被送中');
-                resolve('No');
+                OKList.push(pname)//结束前推送
+                console.log(pname + ": 该节点未被送中 ->" +sCode)
+                resolve("No")
+                return
             }
         }, reason => {
-            ErrorList.push(pname);
-            console.log(pname + ': 该节点检测失败');
-            reject('Error');
+            ErrorList.push(pname)
+            console.log(pname + ": 该节点检测失败")
+            reject("Error")
+            return
         });
     })
 }
-
