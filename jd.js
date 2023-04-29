@@ -1,13 +1,9 @@
-$httpClient.get("https://policies.google.com/terms?hl=zh-CN", function(error, response, data){
-  if (error){
-    console.log(error);
-    $done();
-  } else {
-    if (data.indexOf("中国") !== -1){
-      console.log("该节点已被送中");
+$task.fetch("https://policies.google.com/terms?hl=zh-CN").then(response => {
+    if (response.body.indexOf("中国") !== -1) {
+        console.log("当前网络被送中");
     } else {
-      console.log("该节点未被送中");
+        console.log("当前网络未被送中");
     }
-    $done();
-  }
+}, reason => {
+    console.log("请求失败");
 });
