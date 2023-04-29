@@ -1,36 +1,41 @@
-// ==Quantumult X Script==
-// @name            Google Policy Check
-// @description     Check if the current node is detected by Google using policy page.
-// @author          ChatGPT
-// @version         1
-// @homepage        https://github.com/chatgpt
-// @icon            url-to-icon
-// @compatibility   Quantumult X (v1.0.5-build186)
-// ==/Quantumult X Script==
+// 获取当前节点信息
+var nodeInfo = $surge.getNodeInfo();
+var nodeName = nodeInfo.nodeName;
+var nodeIP = nodeInfo.ip;
 
-// Step 1: 准备工作
-const policyUrl = "https://policies.google.com/terms?hl=zh-CN";
-const reqHeaders = {"User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 15_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.1 Mobile/15E148 Safari/604.1"};
+// 构造请求头
+var headers = {
+  'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 15_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.1 Mobile/15E148 Safari/604.1',
+  'Host': 'policies.google.com',
+  'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+  'Accept-Language': 'zh-cn',
+  'Connection': 'close'
+};
 
-// Step 2: 发送请求并解析响应
-$httpClient.get(policyUrl, {"headers": reqHeaders}, (error, response, data) => {
-    if (error) {
-        console.error(`请求 ${policyUrl} 失败，错误信息：${error}`);
-        $done();
-    }
-    if (response.status != 200) {
-        console.error(`请求 ${policyUrl} 失败，响应状态码：${response.status}`);
-        $done();
-    }
+// 构造请求
+var url = 'https://policies.google.com/terms?hl=zh-CN';
+var method = 'GET';
+var body = '';
+var request = {
+  url: url,
+  method: method,
+  headers: headers,
+  body: body
+};
 
-    // Step 3: 分析响应内容
-    const content = response.body;
-    if (content.indexOf("中国") != -1) {
-        console.log("当前节点被 Google 检测到了！");
-    } else {
-        console.log("当前节点未被 Google 检测到。");
-    }
+// 发送请求
+$task.fetch(request).then(response => {
+  // 解析文本内容
+  var text = $response.body.text();
+  var regex = /中国/;
+  var isBlocked = regex.test(text);
 
-    // Step 4: 结束脚本
-    $done();
+  // 输出结果
+  if (isBlocked) {
+    console.log(nodeName + '(' + nodeIP + ')' + ' 已被送中');
+  } else {
+    console.log(nodeName + '(' + nodeIP + ')' + ' 未被送中');
+  }
+}, reason => {
+  console.log(nodeName + '(' + nodeIP + ')' + ' 请求失败');
 });
