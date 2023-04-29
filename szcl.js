@@ -201,21 +201,19 @@ function testGoogle(pname) {
             let sCode = response.statusCode
             hmessage = "该节点未被送中"
             //console.log(pname+sCode);
-            if (sign == 0) {
-                if (data.indexOf('中国') !== -1) {
-                    NoList.push(pname)
-                    console.log(pname + ": 该节点已被送中 ->" + sCode)
-                    resolve("YES")
-                    return
-                } else {
-                    OKList.push(pname)//结束前推送
-                    console.log(pname + ": 该节点未被送中 ->" + sCode)
-                    resolve("No")
-                    return
-                }
+
+            if (data.indexOf('中国') !== -1) {
+                NoList.push(pname)
+                console.log(pname + ": 该节点已被送中 ->" + sCode)
+                resolve("YES")
+                return
             } else {
+                OKList.push(pname)//结束前推送
+                console.log(pname + ": 该节点未被送中 ->" + sCode)
+                resolve("No")
                 return
             }
+
         }, reason => {
             if (sign == 0) {
                 ErrorList.push(pname)
