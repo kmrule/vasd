@@ -176,39 +176,19 @@ function ReOrder(cnt) {
 });
 }
 
-function testGoogle(pname) {
-  return new Promise((resolve, reject) => {
-    const url = "https://policies.google.com/terms?hl=zh-CN";
-    const method = "GET";
-    const headers = {
-      "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 15_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.1 Mobile/15E148 Safari/604.1",
-      "Accept-Language": "zh-CN,zh;q=0.9",
-    };
-
-    const myRequest = {
-      url: url,
-      method: method,
-      headers: headers,
-    };
-
-    let timer = setTimeout(() => {
-      reject(new Error("请求超时"));
-    }, 5000); // 设置超时时间为 5 秒
-
-    $task.fetch(myRequest).then((response) => {
-      const content = response.body.toString();
-      clearTimeout(timer); // 清除超时计时器
-      if (content.includes("中国")) {
-        console.log("送中了");
-        resolve();
-      } else {
-        console.log("没有送中");
-        reject();
-      }
-    }).catch((error) => {
-      console.error(error);
-      clearTimeout(timer); // 清除超时计时器
-      reject();
-    });
-  });
-}
+$task.fetch({url: 'https://policies.google.com/terms?hl=zh-CN'}).then(response => {
+  const body = response.body;
+  if (body.indexOf('中国') >= 0) {
+    NoList.push(pname);
+    console.log(pname + ': 该节点已被送中');
+    resolve('YES');
+  } else {
+    OKList.push(pname);
+    console.log(pname + ': 该节点未被送中');
+    resolve('No');
+  }
+}, reason => {
+  ErrorList.push(pname);
+  console.log(pname + ': 该节点检测失败');
+  reject('Error');
+});
