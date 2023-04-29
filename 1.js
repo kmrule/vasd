@@ -1,4 +1,4 @@
-
+function testGoogle(pname) {
     return new Promise((resolve, reject) => {
         const url = `https://policies.google.com/terms?hl=zh-CN`;
         const method = `GET`;
@@ -29,4 +29,4 @@
             reject("Error");
         });
     })
-
+}
